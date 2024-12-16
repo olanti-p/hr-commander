@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=3 uid="uid://c7u7f43g7p2u3"]
+
+[ext_resource type="Texture2D" uid="uid://cmuk154n24nkj" path="res://gfx/player_ship1.png" id="1_hk5rj"]
+[ext_resource type="Script" path="res://scenes/player_ship.gd" id="1_w5bdn"]
+[ext_resource type="Texture2D" uid="uid://q8su2cey0254" path="res://gfx/player_ship2.png" id="2_13dod"]
+[ext_resource type="PackedScene" uid="uid://bqjf6x26yquuv" path="res://scenes/player_ui.tscn" id="4_cxs84"]
+[ext_resource type="AudioStream" uid="uid://4nq11tpljeyj" path="res://sfx/player_shoot.wav" id="5_ykc2j"]
+[ext_resource type="AudioStream" uid="uid://82vf6vur5tp1" path="res://sfx/pod_picked_up.wav" id="6_ny15u"]
+[ext_resource type="AudioStream" uid="uid://dw6e2txxgpmni" path="res://sfx/player_hurt.wav" id="7_sgsv1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lootv"]
+radius = 24.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hcw1l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hk5rj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_13dod")
+}],
+"loop": true,
+"name": &"default",
+"speed": 16.0
+}]
+
+[node name="PlayerShip" type="Area2D"]
+collision_layer = 2
+collision_mask = 17
+script = ExtResource("1_w5bdn")
+
+[node name="PlayerUI" parent="." instance=ExtResource("4_cxs84")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_lootv")
+
+[node name="Rotatable" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Rotatable"]
+position = Vector2(7, 0)
+rotation = 1.5708
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_hcw1l")
+autoplay = "default"
+frame_progress = 0.0345328
+
+[node name="GunR" type="Marker2D" parent="Rotatable"]
+unique_name_in_owner = true
+position = Vector2(13, 14)
+rotation = 1.5708
+
+[node name="GunL" type="Marker2D" parent="Rotatable"]
+unique_name_in_owner = true
+position = Vector2(13, -14)
+rotation = 1.5708
+
+[node name="ReloadTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="Fire" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_ykc2j")
+volume_db = -10.0
+max_polyphony = 2
+
+[node name="PickedUpPod" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ny15u")
+max_polyphony = 3
+
+[node name="Damaged" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_sgsv1")
+max_polyphony = 3
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

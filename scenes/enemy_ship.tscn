@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://tclmx2p4o1jk"]
+
+[ext_resource type="Texture2D" uid="uid://dfgmafqbrplp2" path="res://gfx/enemy_ship1.png" id="1_m5cbi"]
+[ext_resource type="Script" path="res://scenes/enemy_ship.gd" id="1_tj6hs"]
+[ext_resource type="Texture2D" uid="uid://d1m5ph7ywmfdv" path="res://gfx/enemy_ship2.png" id="2_k12gl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n8cmo"]
+radius = 24.0208
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7ry5e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_m5cbi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_k12gl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="EnemyShip" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_tj6hs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n8cmo")
+
+[node name="Rotatable" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Rotatable"]
+rotation = 1.5708
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_7ry5e")
+autoplay = "default"
+
+[node name="GunR" type="Marker2D" parent="Rotatable"]
+unique_name_in_owner = true
+position = Vector2(11, 18)
+rotation = 1.5708
+
+[node name="GunL" type="Marker2D" parent="Rotatable"]
+unique_name_in_owner = true
+position = Vector2(11, -18)
+rotation = 1.5708
+
+[node name="Forward" type="Marker2D" parent="Rotatable"]
+unique_name_in_owner = true
+position = Vector2(24, 0)
+
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

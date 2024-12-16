@@ -1,0 +1,156 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqjf6x26yquuv"]
+
+[ext_resource type="Script" path="res://scenes/player_ui.gd" id="1_c3o87"]
+[ext_resource type="AudioStream" uid="uid://dcjodl4tx34pl" path="res://sfx/game_over.wav" id="2_c2iy7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhqm4"]
+content_margin_top = 6.0
+bg_color = Color(0, 0.0498333, 0.23, 1)
+expand_margin_top = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0oyh4"]
+bg_color = Color(0, 0.521569, 0.337255, 1)
+expand_margin_top = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbv8j"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.022, 0.0946, 0.22, 1)
+
+[node name="PlayerUI" type="CanvasLayer"]
+script = ExtResource("1_c3o87")
+
+[node name="GameplayOverlay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GameplayOverlay"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_constants/margin_left = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameplayOverlay/MarginContainer"]
+layout_mode = 2
+
+[node name="HpText" type="Label" parent="GameplayOverlay/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "HP"
+horizontal_alignment = 1
+
+[node name="HpBar" type="ProgressBar" parent="GameplayOverlay/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_yhqm4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_0oyh4")
+value = 75.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="GameplayOverlay"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 16
+
+[node name="ScoreText" type="Label" parent="GameplayOverlay/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Score: 1337"
+
+[node name="GameOver" type="Control" parent="."]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="GameOver"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -56.0
+offset_right = 46.0
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lbv8j")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/PanelContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="GameOver/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="Title2" type="Label" parent="GameOver/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Final score: "
+horizontal_alignment = 1
+
+[node name="ScoreFinal" type="Label" parent="GameOver/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1337"
+horizontal_alignment = 1
+
+[node name="Restart" type="Button" parent="GameOver/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Restart!"
+
+[node name="GameOverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_c2iy7")
+
+[node name="UpgradeUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 428.0
+offset_bottom = 137.0
+text = "Press number key to unlock new ability:
+1 - Blink (press Space to dodge)
+2 - Armor (-50% damage)
+3 - Escape pod magnet
+4 - Enemy synchronizer"
+
+[node name="UpgradeTimer" type="Timer" parent="."]
+wait_time = 30.0
+autostart = true
+
+[connection signal="pressed" from="GameOver/PanelContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="timeout" from="UpgradeTimer" to="." method="_on_upgrade_timer_timeout"]

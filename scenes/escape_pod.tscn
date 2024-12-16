@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://dm476uun7lg3n"]
+
+[ext_resource type="Texture2D" uid="uid://wfanc0tliqp7" path="res://gfx/escape_pod1.png" id="1_a5p7c"]
+[ext_resource type="Script" path="res://scenes/escape_pod.gd" id="1_hgk7h"]
+[ext_resource type="Texture2D" uid="uid://ooa83urx27d5" path="res://gfx/escape_pod2.png" id="2_6x1ly"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r6xqb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_a5p7c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_6x1ly")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5xwwi"]
+
+[node name="EscapePod" type="Area2D"]
+collision_layer = 16
+script = ExtResource("1_hgk7h")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_r6xqb")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CapsuleShape2D_5xwwi")
+
+[node name="Forward" type="Marker2D" parent="."]
+position = Vector2(0, -20)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
